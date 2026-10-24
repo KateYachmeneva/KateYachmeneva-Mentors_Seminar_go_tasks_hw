@@ -52,6 +52,32 @@ func balanceAllowed(balance float64) error {
 	return nil
 }
 
+type accountOperation struct {
+	title   string
+	amount  float64
+	balance float64
+}
+
+func addOperation(history []accountOperation, title string, amount, balance float64) []accountOperation {
+	return append(history, accountOperation{
+		title:   title,
+		amount:  amount,
+		balance: balance,
+	})
+}
+
+func historyText(history []accountOperation) string {
+	if len(history) == 0 {
+		return "История операций пуста."
+	}
+	var builder strings.Builder
+	builder.WriteString("История операций:")
+	for index, operation := range history {
+		fmt.Fprintf(&builder, "\n%d. %s на %s, баланс: %s", index+1, operation.title, balanceText(operation.amount), balanceText(operation.balance))
+	}
+	return builder.String()
+}
+
 func userQuits(text string) bool {
 	switch strings.ToLower(strings.TrimSpace(text)) {
 	case "q", "quit", "exit", "й", "выход":

@@ -22,11 +22,7 @@ func main() {
 			return
 		}
 
-		if isPrime(n) {
-			fmt.Printf("%d — простое число.\n", n)
-		} else {
-			fmt.Printf("%d — не простое число.\n", n)
-		}
+		fmt.Println(primeMessage(n))
 
 		again, exit, err := readYesOrNo(scanner, "Проверить другое число? [y/n]: ")
 		if exit || err != nil || !again {

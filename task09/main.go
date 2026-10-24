@@ -19,6 +19,7 @@ func main() {
 		finishSession(err)
 		return
 	}
+	var history []accountOperation
 
 	for {
 		showActions()
@@ -44,7 +45,9 @@ func main() {
 				continue
 			}
 			balance = updated
+			history = addOperation(history, "Пополнение", amount, balance)
 			fmt.Printf("Баланс: %s\n", balanceText(balance))
+			fmt.Println(historyText(history))
 		case "3":
 			amount, done, readErr := askAmount(scanner, "Сумма снятия: ")
 			if done || readErr != nil {
@@ -57,7 +60,9 @@ func main() {
 				continue
 			}
 			balance = updated
+			history = addOperation(history, "Снятие", amount, balance)
 			fmt.Printf("Баланс: %s\n", balanceText(balance))
+			fmt.Println(historyText(history))
 		case "q", "Q", "quit", "exit", "й", "выход":
 			fmt.Printf("Итоговый баланс: %s\n", balanceText(balance))
 			finishSession(nil)
