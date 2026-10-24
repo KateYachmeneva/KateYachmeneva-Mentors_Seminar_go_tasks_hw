@@ -1,0 +1,28 @@
+# Скомпилированные программы и тестовые бинарники.
+# Исходники *.go, go.mod и go.sum этим файлом не игнорируются.
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+__debug_bin*
+/bin/
+/dist/
+
+# Зависимости и локальное рабочее пространство Go.
+/vendor/
+go.work
+go.work.sum
+
+# Секреты.
+.env
+.env.*
+!.env.example
+
+# Редакторы и ОС.
+.idea/
+.vscode/
+*.swp
+.DS_Store
