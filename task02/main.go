@@ -15,24 +15,24 @@ func main() {
 	fmt.Println("Введите q в любой момент, чтобы выйти.")
 
 	for {
-		число, хочетВыйти, err := спроситьЧисло(scanner, "Введите число N: ")
-		if хочетВыйти || err != nil {
-			завершитьПрограмму(err)
+		number, exit, err := readNumber(scanner, "Введите число N: ")
+		if exit || err != nil {
+			finishProgram(err)
 			return
 		}
 
-		fmt.Println(полныйОтвет(число))
+		fmt.Println(fullReport(number))
 
-		ещёРаз, хочетВыйти, err := спроситьПовтор(scanner, "Проверить ещё число? [y/n]: ")
-		if хочетВыйти || err != nil || !ещёРаз {
-			завершитьПрограмму(err)
+		again, exit, err := readAgain(scanner, "Проверить ещё число? [y/n]: ")
+		if exit || err != nil || !again {
+			finishProgram(err)
 			return
 		}
 		fmt.Println()
 	}
 }
 
-func завершитьПрограмму(err error) {
+func finishProgram(err error) {
 	if err != nil && err != io.EOF {
 		fmt.Fprintln(os.Stderr, "Ошибка ввода:", err)
 		os.Exit(1)
@@ -40,34 +40,34 @@ func завершитьПрограмму(err error) {
 	fmt.Println("Выход.")
 }
 
-func спроситьЧисло(scanner *bufio.Scanner, подсказка string) (int64, bool, error) {
+func readNumber(scanner *bufio.Scanner, prompt string) (int64, bool, error) {
 	for {
-		строка, err := прочитатьСтроку(scanner, подсказка)
+		line, err := readLine(scanner, prompt)
 		if err != nil {
 			return 0, false, err
 		}
-		if командаВыхода(строка) {
+		if isExit(line) {
 			return 0, true, nil
 		}
-		число, err := строкаВЦелоеЧисло(строка)
+		value, err := parseInteger(line)
 		if err != nil {
 			fmt.Println("Ошибка:", err)
 			continue
 		}
-		return число, false, nil
+		return value, false, nil
 	}
 }
 
-func спроситьПовтор(scanner *bufio.Scanner, подсказка string) (bool, bool, error) {
+func readAgain(scanner *bufio.Scanner, prompt string) (bool, bool, error) {
 	for {
-		строка, err := прочитатьСтроку(scanner, подсказка)
+		line, err := readLine(scanner, prompt)
 		if err != nil {
 			return false, false, err
 		}
-		if командаВыхода(строка) {
+		if isExit(line) {
 			return false, true, nil
 		}
-		switch strings.ToLower(strings.TrimSpace(строка)) {
+		switch strings.ToLower(strings.TrimSpace(line)) {
 		case "y", "yes", "д", "да", "":
 			return true, false, nil
 		case "n", "no", "н", "нет":
@@ -78,8 +78,8 @@ func спроситьПовтор(scanner *bufio.Scanner, подсказка str
 	}
 }
 
-func прочитатьСтроку(scanner *bufio.Scanner, подсказка string) (string, error) {
-	fmt.Print(подсказка)
+func readLine(scanner *bufio.Scanner, prompt string) (string, error) {
+	fmt.Print(prompt)
 	if !scanner.Scan() {
 		if err := scanner.Err(); err != nil {
 			return "", err

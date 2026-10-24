@@ -6,78 +6,78 @@ import (
 	"strings"
 )
 
-func числоПоложительное(число int64) bool {
-	return число > 0
+func isPositive(n int64) bool {
+	return n > 0
 }
 
-func числоОтрицательное(число int64) bool {
-	return число < 0
+func isNegative(n int64) bool {
+	return n < 0
 }
 
-func числоЧётное(число int64) bool {
-	return число%2 == 0
+func isEven(n int64) bool {
+	return n%2 == 0
 }
 
-func числоДелитсяНа(число, делитель int64) bool {
-	if делитель == 0 {
+func isDivisibleBy(n, divisor int64) bool {
+	if divisor == 0 {
 		return false
 	}
-	return число%делитель == 0
+	return n%divisor == 0
 }
 
-func текстПроЗнак(число int64) string {
-	if числоПоложительное(число) {
+func signMessage(n int64) string {
+	if isPositive(n) {
 		return "Число положительное."
 	}
-	if числоОтрицательное(число) {
+	if isNegative(n) {
 		return "Число отрицательное."
 	}
 	return "Число равно нулю: оно ни положительное, ни отрицательное."
 }
 
-func текстПроЧётность(число int64) string {
-	if числоЧётное(число) {
+func evenOddMessage(n int64) string {
+	if isEven(n) {
 		return "Число чётное."
 	}
 	return "Число нечётное."
 }
 
-func текстПроДелимостьНа3И5(число int64) string {
-	делитсяНа3 := числоДелитсяНа(число, 3)
-	делитсяНа5 := числоДелитсяНа(число, 5)
+func divisionMessage(n int64) string {
+	divisibleBy3 := isDivisibleBy(n, 3)
+	divisibleBy5 := isDivisibleBy(n, 5)
 	switch {
-	case делитсяНа3 && делитсяНа5:
+	case divisibleBy3 && divisibleBy5:
 		return "Число делится и на 3, и на 5."
-	case делитсяНа3:
+	case divisibleBy3:
 		return "Число делится на 3, но не делится на 5."
-	case делитсяНа5:
+	case divisibleBy5:
 		return "Число делится на 5, но не делится на 3."
 	default:
 		return "Число не делится ни на 3, ни на 5."
 	}
 }
 
-func полныйОтвет(число int64) string {
-	return текстПроЗнак(число) + "\n" + текстПроЧётность(число) + "\n" + текстПроДелимостьНа3И5(число)
+func fullReport(n int64) string {
+	return signMessage(n) + "\n" + evenOddMessage(n) + "\n" + divisionMessage(n)
 }
 
-func строкаВЦелоеЧисло(строка string) (int64, error) {
-	текст := strings.TrimSpace(строка)
-	if текст == "" {
+func parseInteger(raw string) (int64, error) {
+	text := strings.TrimSpace(raw)
+	if text == "" {
 		return 0, fmt.Errorf("пустая строка")
 	}
-	if strings.Contains(текст, ".") || strings.Contains(текст, ",") {
-		return 0, fmt.Errorf("%q не целое число", strings.TrimSpace(строка))
+	if strings.Contains(text, ".") || strings.Contains(text, ",") {
+		return 0, fmt.Errorf("%q не целое число", strings.TrimSpace(raw))
 	}
-	число, err := strconv.ParseInt(текст, 10, 64)
+	value, err := strconv.ParseInt(text, 10, 64)
 	if err != nil {
-		return 0, fmt.Errorf("%q не является целым числом", strings.TrimSpace(строка))
+		return 0, fmt.Errorf("%q не является целым числом", strings.TrimSpace(raw))
 	}
-	return число, nil
+	return value, nil
 }
 
-func командаВыхода(текст string) bool {
-	switch strings.ToLower(strings.TrimSpace(текст)) {
+func isExit(text string) bool {
+	switch strings.ToLower(strings.TrimSpace(text)) {
 	case "q", "quit", "exit", "й", "выход":
 		return true
 	default:
